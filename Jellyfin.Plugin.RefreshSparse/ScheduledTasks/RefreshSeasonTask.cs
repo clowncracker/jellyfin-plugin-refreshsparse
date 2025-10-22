@@ -46,8 +46,8 @@ namespace Jellyfin.Plugin.RefreshSparse
                     Recursive = true,
                     OrderBy = new[]
                         {
-                            (ItemSortBy.SeriesSortName, (SortOrder?)null),
-                            (ItemSortBy.SortName, (SortOrder?)null)
+                            (ItemSortBy.SeriesSortName, (object?)null),
+                            (ItemSortBy.SortName, (object?)null)
                         }
                 }).Cast<Season>().Where(i => DaysSinceRefresh(i) > PluginConfig.SeasonCooldownDays
                     && !SeriesBlockList.Any(sbl => i.SeriesName.Equals(sbl, StringComparison.OrdinalIgnoreCase))
