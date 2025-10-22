@@ -61,8 +61,8 @@ namespace Jellyfin.Plugin.RefreshSparse
                     MinDateCreated = minDate,
                     OrderBy = new[]
                         {
-                            (ItemSortBy.SeriesSortName, SortOrder.Ascending),
-                            (ItemSortBy.SortName, SortOrder.Ascending)
+                            (ItemSortBy.SeriesSortName, SortOrderDirection.Ascending),
+                            (ItemSortBy.SortName, SortOrderDirection.Ascending)
                         }
                 }).Cast<Episode>().Where(i => (maxDays == -1 || i.PremiereDate >= minDate || !i.PremiereDate.HasValue)
                     && MinutesSinceRefresh(i) > PluginConfig.RefreshCooldownMinutes
