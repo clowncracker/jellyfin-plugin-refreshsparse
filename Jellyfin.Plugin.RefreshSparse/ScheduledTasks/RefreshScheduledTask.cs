@@ -147,7 +147,7 @@ namespace Jellyfin.Plugin.RefreshSparse
 
         private bool BadName(BaseItem item)
         {
-            return _badNameList.Any(en => item.Name is not null && item.Name.StartsWith(en, StringComparison.CurrentCultureIgnoreCase));
+            return _badNameList.Any(en => item.Name is not null && item.Name.Contains(en, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private bool OverviewBadName(BaseItem item)
