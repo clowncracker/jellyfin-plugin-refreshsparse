@@ -100,7 +100,7 @@ namespace Jellyfin.Plugin.RefreshSparse
 
             if (BadName(item))
             {
-                Logger.LogInformation("    name starts with a bad name");
+                Logger.LogInformation("    name contains a bad name");
             }
 
             if (MissingImage(item, ImageType.Primary, PluginConfig.MissingImage))
