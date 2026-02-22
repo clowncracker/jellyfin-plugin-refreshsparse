@@ -65,7 +65,7 @@ namespace Jellyfin.Plugin.RefreshSparse
                             (ItemSortBy.SeriesSortName, SortOrder.Ascending),
                             (ItemSortBy.SortName, SortOrder.Ascending)
                         }
-                }).Cast<Episode>().Where(i => (maxDays == -1 || i.PremiereDate >= minDate || !i.PremiereDate.HasValue)
+                }).Cast<Episode>().Where(i => (maxDays == -1 || i.DateCreated >= minDate)
                     && MinutesSinceRefresh(i) > PluginConfig.RefreshCooldownMinutes
                     && !SeriesBlockList.Any(sbl => i.SeriesName.Equals(sbl, StringComparison.OrdinalIgnoreCase))
                     && NeedsRefresh(i));
