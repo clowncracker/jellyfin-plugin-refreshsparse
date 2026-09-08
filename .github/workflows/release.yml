@@ -1,47 +1,108 @@
 name: Release
-
 on:
   push:
     tags:
       - "*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      -
-        name: Setup .NET Core
+
+      - name: Check tag matches build.yaml version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          ver="$(grep -oP '^version:\s*"\K[^"]+' build.yaml)"
+          if [ "$tag" != "$ver" ]; then
+            echo "::error::Tag '$GITHUB_REF_NAME' does not match build.yaml version '$ver'. Bump build.yaml first."
+            exit 1
+          fi
+
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.x
-      -
-        name: Build Jellyfin Plugin
+
+      - name: Build Jellyfin Plugin
         uses: oddstr13/jellyfin-plugin-repository-manager@v0.5.0
         id: jprm
         with:
           dotnet-target: net10.0
-      -
-        name: Prepare Release Checksums
+
+      - name: Prepare Release Checksums
         run: |-
           hash="$(md5sum ${{ steps.jprm.outputs.artifact }} | cut -d ' ' -f 1)"
           echo "$hash $(basename ${{ steps.jprm.outputs.artifact }})" >> checksums.txt
-      -
-        name: Changelog
+
+      - name: Changelog
         uses: Bullrich/generate-release-changelog@master
         id: changelog
         env:
           REPO: ${{ github.repository }}
-      -
-        name: Release
+
+      - name: Release
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ steps.changelog.outputs.changelog }}
           files: |
             checksums.txt
             ${{ steps.jprm.outputs.artifact }}
+
+      - name: Update and commit manifest.json
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          ARTIFACT: ${{ steps.jprm.outputs.artifact }}
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 -m pip install --quiet pyyaml
+          git checkout master
+          python3 <<'PY'
+          import hashlib, json, os, datetime, yaml
+
+          artifact = os.environ["ARTIFACT"]
+          tag = os.environ["TAG"]
+          repo = os.environ["REPO"]
+
+          b = yaml.safe_load(open("build.yaml"))
+          version = str(b["version"])
+          target_abi = str(b["targetAbi"])
+          changelog = str(b.get("changelog", "")).strip() + "\n"
+
+          checksum = hashlib.md5(open(artifact, "rb").read()).hexdigest()
+          filename = os.path.basename(artifact)
+          source_url = f"https://github.com/{repo}/releases/download/{tag}/{filename}"
+          timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+          entry = {
+              "version": version,
+              "changelog": changelog,
+              "targetAbi": target_abi,
+              "sourceUrl": source_url,
+              "checksum": checksum,
+              "timestamp": timestamp,
+          }
+
+          manifest = json.load(open("manifest.json"))
+          versions = [v for v in manifest[0]["versions"] if v["version"] != version]
+          versions.insert(0, entry)
+          manifest[0]["versions"] = versions
+
+          with open("manifest.json", "w") as f:
+              json.dump(manifest, f, indent=4)
+              f.write("\n")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add manifest.json
+          git commit -m "Update manifest for ${TAG}" || echo "No manifest changes"
+          git push origin master
