@@ -12,8 +12,8 @@
                 "changelog": "Jellyfin 12.0 (.NET 10) support\n",
                 "targetAbi": "12.0.0.0",
                 "sourceUrl": "https://github.com/clowncracker/jellyfin-plugin-refreshsparse/releases/download/v6.0.0.0/refreshsparse_6.0.0.0.zip",
-                "checksum": "376221bb34c24ddffa38855cf57e783d",
-                "timestamp": "2026-02-04T00:00:00Z"
+                "checksum": "c798b4ce254f0345ec9e97504a3570f1",
+                "timestamp": "2026-09-08T16:32:10Z"
             }
         ]
     }
