@@ -2,14 +2,14 @@
 <h3 align="center">For use in the <a href="https://jellyfin.media">Jellyfin Project</a></h3>
 
 <p align="center">
-<a href="https://github.com/SenorSmartyPants/jellyfin-plugin-refreshsparse/actions/workflows/build-dotnet.yml">
-<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/SenorSmartyPants/jellyfin-plugin-refreshsparse/build-dotnet.yml">
+<a href="https://github.com/clowncracker/jellyfin-plugin-refreshsparse/actions/workflows/build-dotnet.yml">
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/clowncracker/jellyfin-plugin-refreshsparse/build-dotnet.yml">
 </a>
-<a href="https://github.com/SenorSmartyPants/jellyfin-plugin-refreshsparse">
-<img alt="GPLv3 License" src="https://img.shields.io/github/license/SenorSmartyPants/jellyfin-plugin-refreshsparse.svg"/>
+<a href="https://github.com/clowncracker/jellyfin-plugin-refreshsparse">
+<img alt="GPLv3 License" src="https://img.shields.io/github/license/clowncracker/jellyfin-plugin-refreshsparse.svg"/>
 </a>
-<a href="https://github.com/SenorSmartyPants/jellyfin-plugin-refreshsparse/releases">
-<img alt="Current Release" src="https://img.shields.io/github/release/SenorSmartyPants/jellyfin-plugin-refreshsparse.svg"/>
+<a href="https://github.com/clowncracker/jellyfin-plugin-refreshsparse/releases">
+<img alt="Current Release" src="https://img.shields.io/github/release/clowncracker/jellyfin-plugin-refreshsparse.svg"/>
 </a>
 </p>
 
@@ -30,28 +30,17 @@ Refresh all metadata/images options.
 
 Pretend option to try it out without updating metadata.
 
+## Compatibility
+
+This branch targets **Jellyfin 12.0** (.NET 10). For Jellyfin 10.11, use the 5.0.0.0 release.
+
 ## Installation
 
-Add [this link][1] to "Repositories" in Jellyfin settings.
+Add [this link][1] to "Repositories" in Jellyfin settings, then install "Refresh Sparse Items" from the Catalog.
 
-[1]: https://raw.githubusercontent.com/SenorSmartyPants/jellyfin-plugin-refreshsparse/master/manifest.json
+[1]: https://raw.githubusercontent.com/clowncracker/jellyfin-plugin-refreshsparse/master/manifest.json
 
 ## Build
 
-1. To build this plugin you will need [.Net 5.x](https://dotnet.microsoft.com/download/dotnet/5.0).
-
-2. Build plugin with following command
-  ```
-  dotnet publish --configuration Release --output bin
-  ```
-
-3. Place the dll-file in the `plugins/RefreshSparse` folder (you might need to create the folders) of your JF install
-
-## Contributing
-
-We welcome all contributions and pull requests! If you have a larger feature in mind please open an issue so we can discuss the implementation before you start.
-In general refer to our [contributing guidelines](https://github.com/jellyfin/.github/blob/master/CONTRIBUTING.md) for further information.
-
-## Licence
-
-This plugins code and packages are distributed under the GPLv3 License. See [LICENSE](./LICENSE) for more information.
+1. To build this plugin you will need [.NET 10.x](https://dotnet.microsoft.com/download/dotnet/10.0).
+2. Build the plugin with the following command:
