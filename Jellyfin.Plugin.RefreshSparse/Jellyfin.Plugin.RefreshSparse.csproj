@@ -10,6 +10,7 @@
     <Nullable>enable</Nullable>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <CodeAnalysisRuleSet>../jellyfin.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>$(NoWarn);CA1873</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
