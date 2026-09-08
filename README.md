@@ -44,3 +44,16 @@ Add [this link][1] to "Repositories" in Jellyfin settings, then install "Refresh
 
 1. To build this plugin you will need [.NET 10.x](https://dotnet.microsoft.com/download/dotnet/10.0).
 2. Build the plugin with the following command:
+```
+dotnet publish Jellyfin.Plugin.RefreshSparse --configuration Release --output bin
+```
+3. Place the resulting `Jellyfin.Plugin.RefreshSparse.dll` in a `plugins/RefreshSparse` folder (you might need to create the folders) of your Jellyfin install, then restart the server.
+
+## Contributing
+
+We welcome all contributions and pull requests! If you have a larger feature in mind please open an issue so we can discuss the implementation before you start.
+In general refer to our [contributing guidelines](https://github.com/jellyfin/.github/blob/master/CONTRIBUTING.md) for further information.
+
+## Licence
+
+This plugin's code and packages are distributed under the GPLv3 License. See [LICENSE](./LICENSE) for more information.
