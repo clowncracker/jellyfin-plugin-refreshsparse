@@ -80,6 +80,13 @@
                             </div>
                             <div class="checkboxContainer checkboxContainer-withDescription">
                                 <label class="emby-checkbox-label">
+                                    <input id="BadNamesRegex" name="BadNamesRegex" type="checkbox" is="emby-checkbox" />
+                                    <span>Treat bad names list as regular expressions</span>
+                                </label>
+                                <div class="fieldDescription">Each | separated entry becomes a case-insensitive regex. Example "\bTBA\b|[Ss]\d+[Ee]\d+"</div>
+                            </div>
+                            <div class="checkboxContainer checkboxContainer-withDescription">
+                                <label class="emby-checkbox-label">
                                     <input id="OverviewBadName" name="OverviewBadName" type="checkbox" is="emby-checkbox" />
                                     <span>Check if overview contains a bad name</span>
                                 </label>
@@ -270,6 +277,7 @@
                         document.querySelector('#MissingOverview').checked = config.MissingOverview;
                         document.querySelector('#NameIsDate').checked = config.NameIsDate;
                         document.querySelector('#BadNames').value = config.BadNames;
+                        document.querySelector('#BadNamesRegex').checked = config.BadNamesRegex;
                         document.querySelector('#OverviewBadName').checked = config.OverviewBadName;
                         document.querySelector('#RefreshCooldownMinutes').value = config.RefreshCooldownMinutes;
                         document.querySelector('#ReplaceAllImages').checked = config.ReplaceAllImages;
@@ -325,6 +333,7 @@
                     config.MissingOverview = document.querySelector('#MissingOverview').checked;
                     config.NameIsDate = document.querySelector('#NameIsDate').checked;
                     config.BadNames = document.querySelector('#BadNames').value;
+                    config.BadNamesRegex = document.querySelector('#BadNamesRegex').checked;
                     config.OverviewBadName = document.querySelector('#OverviewBadName').checked;
                     config.RefreshCooldownMinutes = document.querySelector('#RefreshCooldownMinutes').value;
                     config.ReplaceAllImages = document.querySelector('#ReplaceAllImages').checked;
