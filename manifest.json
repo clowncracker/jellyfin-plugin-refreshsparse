@@ -8,6 +8,14 @@
         "category": "Metadata",
         "versions": [
             {
+                "version": "6.1.0.0",
+                "changelog": "Regex option for bad names list\n",
+                "targetAbi": "12.0.0.0",
+                "sourceUrl": "https://github.com/clowncracker/jellyfin-plugin-refreshsparse/releases/download/v6.1.0.0/refreshsparse_6.1.0.0.zip",
+                "checksum": "c2fa1975b675fa4cc219669935558095",
+                "timestamp": "2026-09-17T04:21:54Z"
+            },
+            {
                 "version": "6.0.0.0",
                 "changelog": "Jellyfin 12.0 (.NET 10) support\n",
                 "targetAbi": "12.0.0.0",
