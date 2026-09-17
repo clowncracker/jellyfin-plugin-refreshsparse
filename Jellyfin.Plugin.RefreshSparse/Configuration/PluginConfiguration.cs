@@ -16,6 +16,7 @@ namespace Jellyfin.Plugin.RefreshSparse.Configuration
             MissingOverview = true;
             NameIsDate = false;
             BadNames = string.Empty;
+            BadNamesRegex = false;
             OverviewBadName = false;
             SeriesBlockList = string.Empty;
             Pretend = true;
@@ -64,6 +65,8 @@ namespace Jellyfin.Plugin.RefreshSparse.Configuration
         public bool NameIsDate { get; set; }
 
         public string BadNames { get; set; }
+
+        public bool BadNamesRegex { get; set; }
 
         public bool OverviewBadName { get; set; }
 
