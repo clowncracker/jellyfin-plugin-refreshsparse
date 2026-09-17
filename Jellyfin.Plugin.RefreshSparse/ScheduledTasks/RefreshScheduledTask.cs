@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Jellyfin.Data.Enums;
 using Jellyfin.Database.Implementations.Enums;
 using MediaBrowser.Controller.Configuration;
@@ -22,7 +23,8 @@ namespace Jellyfin.Plugin.RefreshSparse
 {
     public class RefreshScheduledTask : BaseRefreshTask, IScheduledTask
     {
-        private IEnumerable<string> _badNameList;
+        private IEnumerable<string> _badNameList = Enumerable.Empty<string>();
+        private List<Regex> _badNameRegexList = new List<Regex>();
 
         public RefreshScheduledTask(
             ILibraryManager libraryManager,
@@ -31,7 +33,7 @@ namespace Jellyfin.Plugin.RefreshSparse
             ILocalizationManager localization,
             IFileSystem fileSystem) : base(libraryManager, config, logger, localization, fileSystem)
         {
-            _badNameList = SplitToArray(PluginConfig.BadNames);
+            BuildBadNameLists();
         }
 
         protected override string ItemTypeName => "episodes";
@@ -42,7 +44,7 @@ namespace Jellyfin.Plugin.RefreshSparse
 
         protected override IEnumerable<Episode> GetItems()
         {
-            _badNameList = SplitToArray(PluginConfig.BadNames);
+            BuildBadNameLists();
 
             // episodes that aired in the past MaxDays days
             // or added to JF in MaxDays
@@ -145,14 +147,61 @@ namespace Jellyfin.Plugin.RefreshSparse
             return PluginConfig.NameIsDate && IsDate(item.Name);
         }
 
+        private void BuildBadNameLists()
+        {
+            _badNameList = SplitToArray(PluginConfig.BadNames);
+            _badNameRegexList = new List<Regex>();
+
+            if (PluginConfig.BadNamesRegex)
+            {
+                foreach (var pattern in _badNameList)
+                {
+                    try
+                    {
+                        _badNameRegexList.Add(new Regex(
+                            pattern,
+                            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                            TimeSpan.FromSeconds(1)));
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Logger.LogWarning(ex, "Invalid bad name regex '{Pattern}' ignored.", pattern);
+                    }
+                }
+            }
+        }
+
+        private bool MatchesBadName(string? text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return false;
+            }
+
+            try
+            {
+                if (PluginConfig.BadNamesRegex)
+                {
+                    return _badNameRegexList.Any(re => re.IsMatch(text));
+                }
+
+                return _badNameList.Any(en => text.Contains(en, StringComparison.CurrentCultureIgnoreCase));
+            }
+            catch (RegexMatchTimeoutException ex)
+            {
+                Logger.LogWarning(ex, "Bad name regex timed out on '{Text}'.", text);
+                return false;
+            }
+        }
+
         private bool BadName(BaseItem item)
         {
-            return _badNameList.Any(en => item.Name is not null && item.Name.Contains(en, StringComparison.CurrentCultureIgnoreCase));
+            return MatchesBadName(item.Name);
         }
 
         private bool OverviewBadName(BaseItem item)
         {
-            return PluginConfig.OverviewBadName && _badNameList.Any(en => item.Overview is not null && item.Overview.Contains(en, StringComparison.CurrentCultureIgnoreCase));
+            return PluginConfig.OverviewBadName && MatchesBadName(item.Overview);
         }
 
         protected override string GetItemName(BaseItem item)
