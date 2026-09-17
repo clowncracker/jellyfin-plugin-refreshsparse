@@ -1,7 +1,7 @@
 ---
 name: "RefreshSparse"
 guid: "12b44f20-6cfb-4be5-9950-3d0fbe74fa35"
-version: "6.0.0.0"
+version: "6.1.0.0"
 targetAbi: "12.0.0.0"
 framework: "net10.0"
 overview: "Refresh episodes based on (missing) metadata"
@@ -13,4 +13,4 @@ owner: "clowncracker"
 artifacts:
   - "Jellyfin.Plugin.RefreshSparse.dll"
 changelog: >
-  Jellyfin 12.0 (.NET 10) support
+  Regex option for bad names list
